@@ -15,14 +15,14 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+export enum SortType {
+  NONE,
+  BY_NAME,
+  BY_LENGTH,
+}
+
 export const App: React.FC = () => {
   const [visibleGoods, setVisibleGoods] = useState([...goodsFromServer]);
-
-  enum SortType {
-    NONE,
-    BY_NAME,
-    BY_LENGTH,
-  }
 
   const [sortType, setSortType] = useState<SortType>(SortType.NONE);
   const [isReversed, setIsReversed] = useState(false);
