@@ -17,8 +17,14 @@ export const goodsFromServer = [
 
 export const App: React.FC = () => {
   const [visibleGoods, setVisibleGoods] = useState([...goodsFromServer]);
-  const [isSortedByName, setIsSortedByName] = useState(false);
-  const [isSortedByLength, setIsSortedByLength] = useState(false);
+
+  enum SortType {
+    NONE,
+    BY_NAME,
+    BY_LENGTH,
+  }
+
+  const [sortType, setSortType] = useState<SortType>(SortType.NONE);
   const [isReversed, setIsReversed] = useState(false);
 
   // Sort alphabetically, starting from the original goods list
@@ -27,8 +33,7 @@ export const App: React.FC = () => {
     const finalGoods = isReversed ? sortedGoods.reverse() : sortedGoods;
 
     setVisibleGoods(finalGoods); // Update visible goods
-    setIsSortedByName(true);
-    setIsSortedByLength(false);
+    setSortType(SortType.BY_NAME);
   }
 
   // Sort by length, starting from the original goods list
@@ -39,8 +44,7 @@ export const App: React.FC = () => {
     const finalGoods = isReversed ? sortedGoods.reverse() : sortedGoods;
 
     setVisibleGoods(finalGoods); // Update visible goods
-    setIsSortedByLength(true);
-    setIsSortedByName(false);
+    setSortType(SortType.BY_LENGTH);
   }
 
   // Reverse the current visible list
@@ -54,13 +58,12 @@ export const App: React.FC = () => {
   // Reset to the original order
   function resetOrder() {
     setVisibleGoods([...goodsFromServer]); // Reset to original list
-    setIsSortedByName(false);
-    setIsSortedByLength(false);
+    setSortType(SortType.NONE);
     setIsReversed(false); // Reset all states
   }
 
   // Show reset button only if any sorting or reversing has been applied
-  const showResetButton = isSortedByName || isSortedByLength || isReversed;
+  const showResetButton = sortType !== SortType.NONE || isReversed;
 
   return (
     <div className="section content">
@@ -68,7 +71,7 @@ export const App: React.FC = () => {
         <button
           onClick={sortByName}
           type="button"
-          className={`button is-info ${!isSortedByName ? 'is-light' : ''}`}
+          className={`button is-info ${sortType !== SortType.BY_NAME ? 'is-light' : ''}`}
         >
           Sort alphabetically
         </button>
@@ -76,7 +79,7 @@ export const App: React.FC = () => {
         <button
           onClick={sortByLength}
           type="button"
-          className={`button is-success ${!isSortedByLength ? 'is-light' : ''}`}
+          className={`button is-success ${sortType !== SortType.BY_LENGTH ? 'is-light' : ''}`}
         >
           Sort by length
         </button>
